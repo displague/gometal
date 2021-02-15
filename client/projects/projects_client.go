@@ -27,7 +27,7 @@ type Client struct {
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	CreateDevice(params *CreateDeviceParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDeviceCreated, error)
+	CreateDevice(params *CreateDeviceParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDeviceOK, error)
 
 	CreateLicense(params *CreateLicenseParams, authInfo runtime.ClientAuthInfoWriter) (*CreateLicenseCreated, error)
 
@@ -120,7 +120,7 @@ For example, `{ "ip_addresses": [..., {"address_family": 4, "public": true, "ip_
 To access a server without public IPs, you can use our Out-of-Band console access (SOS) or use another server with public IPs as a proxy.
 
 */
-func (a *Client) CreateDevice(params *CreateDeviceParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDeviceCreated, error) {
+func (a *Client) CreateDevice(params *CreateDeviceParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDeviceOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewCreateDeviceParams()
@@ -142,7 +142,7 @@ func (a *Client) CreateDevice(params *CreateDeviceParams, authInfo runtime.Clien
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*CreateDeviceCreated)
+	success, ok := result.(*CreateDeviceOK)
 	if ok {
 		return success, nil
 	}

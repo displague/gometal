@@ -23,8 +23,8 @@ type CreateDeviceReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateDeviceReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
-		result := NewCreateDeviceCreated()
+	case 200:
+		result := NewCreateDeviceOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -58,27 +58,27 @@ func (o *CreateDeviceReader) ReadResponse(response runtime.ClientResponse, consu
 	}
 }
 
-// NewCreateDeviceCreated creates a CreateDeviceCreated with default headers values
-func NewCreateDeviceCreated() *CreateDeviceCreated {
-	return &CreateDeviceCreated{}
+// NewCreateDeviceOK creates a CreateDeviceOK with default headers values
+func NewCreateDeviceOK() *CreateDeviceOK {
+	return &CreateDeviceOK{}
 }
 
-/* CreateDeviceCreated describes a response with status code 201, with default header values.
+/* CreateDeviceOK describes a response with status code 200, with default header values.
 
 created
 */
-type CreateDeviceCreated struct {
+type CreateDeviceOK struct {
 	Payload *types.Device
 }
 
-func (o *CreateDeviceCreated) Error() string {
-	return fmt.Sprintf("[POST /projects/{id}/devices][%d] createDeviceCreated  %+v", 201, o.Payload)
+func (o *CreateDeviceOK) Error() string {
+	return fmt.Sprintf("[POST /projects/{id}/devices][%d] createDeviceOK  %+v", 200, o.Payload)
 }
-func (o *CreateDeviceCreated) GetPayload() *types.Device {
+func (o *CreateDeviceOK) GetPayload() *types.Device {
 	return o.Payload
 }
 
-func (o *CreateDeviceCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *CreateDeviceOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(types.Device)
 

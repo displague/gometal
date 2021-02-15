@@ -1,0 +1,13 @@
+diff --git a/equinix-metal.patched.json b/equinix-metal.patched.json
+index 8808e45..9ba685d 100644
+--- a/equinix-metal.patched.json
++++ b/equinix-metal.patched.json
+@@ -1817,7 +1817,7 @@
+           }
+         ],
+         "responses": {
+-          "201": {
++          "200": {
+             "description": "created",
+             "schema": {
+               "$ref": "#/definitions/Device"

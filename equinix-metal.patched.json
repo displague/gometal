@@ -1817,7 +1817,7 @@
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "description": "created",
             "schema": {
               "$ref": "#/definitions/Device"
