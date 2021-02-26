@@ -25,14 +25,11 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DeleteVirtualNetwork(params *DeleteVirtualNetworkParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteVirtualNetworkOK, error)
+	DeleteVirtualNetwork(params *DeleteVirtualNetworkParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteVirtualNetworkOK, error)
 
-	GetVirtualNetwork(params *GetVirtualNetworkParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetVirtualNetworkOK, error)
+	GetVirtualNetwork(params *GetVirtualNetworkParams, authInfo runtime.ClientAuthInfoWriter) (*GetVirtualNetworkOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -42,12 +39,13 @@ type ClientService interface {
 
   Deletes a virtual network.
 */
-func (a *Client) DeleteVirtualNetwork(params *DeleteVirtualNetworkParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteVirtualNetworkOK, error) {
+func (a *Client) DeleteVirtualNetwork(params *DeleteVirtualNetworkParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteVirtualNetworkOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteVirtualNetworkParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "deleteVirtualNetwork",
 		Method:             "DELETE",
 		PathPattern:        "/virtual-networks/{id}",
@@ -59,12 +57,7 @@ func (a *Client) DeleteVirtualNetwork(params *DeleteVirtualNetworkParams, authIn
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -83,12 +76,13 @@ func (a *Client) DeleteVirtualNetwork(params *DeleteVirtualNetworkParams, authIn
 
   Get a virtual network.
 */
-func (a *Client) GetVirtualNetwork(params *GetVirtualNetworkParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetVirtualNetworkOK, error) {
+func (a *Client) GetVirtualNetwork(params *GetVirtualNetworkParams, authInfo runtime.ClientAuthInfoWriter) (*GetVirtualNetworkOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetVirtualNetworkParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "getVirtualNetwork",
 		Method:             "GET",
 		PathPattern:        "/virtual-networks/{id}",
@@ -100,12 +94,7 @@ func (a *Client) GetVirtualNetwork(params *GetVirtualNetworkParams, authInfo run
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

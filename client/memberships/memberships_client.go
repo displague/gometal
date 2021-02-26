@@ -25,16 +25,13 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DeleteMembership(params *DeleteMembershipParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteMembershipNoContent, error)
+	DeleteMembership(params *DeleteMembershipParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteMembershipNoContent, error)
 
-	FindMembershipByID(params *FindMembershipByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindMembershipByIDOK, error)
+	FindMembershipByID(params *FindMembershipByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindMembershipByIDOK, error)
 
-	UpdateMembership(params *UpdateMembershipParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdateMembershipOK, error)
+	UpdateMembership(params *UpdateMembershipParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateMembershipOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -44,12 +41,13 @@ type ClientService interface {
 
   Deletes the membership.
 */
-func (a *Client) DeleteMembership(params *DeleteMembershipParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteMembershipNoContent, error) {
+func (a *Client) DeleteMembership(params *DeleteMembershipParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteMembershipNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteMembershipParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "deleteMembership",
 		Method:             "DELETE",
 		PathPattern:        "/memberships/{id}",
@@ -61,12 +59,7 @@ func (a *Client) DeleteMembership(params *DeleteMembershipParams, authInfo runti
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -85,12 +78,13 @@ func (a *Client) DeleteMembership(params *DeleteMembershipParams, authInfo runti
 
   Returns a single membership.
 */
-func (a *Client) FindMembershipByID(params *FindMembershipByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindMembershipByIDOK, error) {
+func (a *Client) FindMembershipByID(params *FindMembershipByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindMembershipByIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindMembershipByIDParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findMembershipById",
 		Method:             "GET",
 		PathPattern:        "/memberships/{id}",
@@ -102,12 +96,7 @@ func (a *Client) FindMembershipByID(params *FindMembershipByIDParams, authInfo r
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -126,12 +115,13 @@ func (a *Client) FindMembershipByID(params *FindMembershipByIDParams, authInfo r
 
   Updates the membership.
 */
-func (a *Client) UpdateMembership(params *UpdateMembershipParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdateMembershipOK, error) {
+func (a *Client) UpdateMembership(params *UpdateMembershipParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateMembershipOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewUpdateMembershipParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "updateMembership",
 		Method:             "PUT",
 		PathPattern:        "/memberships/{id}",
@@ -143,12 +133,7 @@ func (a *Client) UpdateMembership(params *UpdateMembershipParams, authInfo runti
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

@@ -25,26 +25,23 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	AcceptInvitation(params *AcceptInvitationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*AcceptInvitationOK, error)
+	AcceptInvitation(params *AcceptInvitationParams, authInfo runtime.ClientAuthInfoWriter) (*AcceptInvitationOK, error)
 
-	CreateOrganizationInvitation(params *CreateOrganizationInvitationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateOrganizationInvitationCreated, error)
+	CreateOrganizationInvitation(params *CreateOrganizationInvitationParams, authInfo runtime.ClientAuthInfoWriter) (*CreateOrganizationInvitationCreated, error)
 
-	CreateProjectInvitation(params *CreateProjectInvitationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateProjectInvitationCreated, error)
+	CreateProjectInvitation(params *CreateProjectInvitationParams, authInfo runtime.ClientAuthInfoWriter) (*CreateProjectInvitationCreated, error)
 
-	DeclineInvitation(params *DeclineInvitationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeclineInvitationNoContent, error)
+	DeclineInvitation(params *DeclineInvitationParams, authInfo runtime.ClientAuthInfoWriter) (*DeclineInvitationNoContent, error)
 
-	FindInvitationByID(params *FindInvitationByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindInvitationByIDOK, error)
+	FindInvitationByID(params *FindInvitationByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindInvitationByIDOK, error)
 
-	FindInvitations(params *FindInvitationsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindInvitationsOK, error)
+	FindInvitations(params *FindInvitationsParams, authInfo runtime.ClientAuthInfoWriter) (*FindInvitationsOK, error)
 
-	FindOrganizationInvitations(params *FindOrganizationInvitationsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationInvitationsOK, error)
+	FindOrganizationInvitations(params *FindOrganizationInvitationsParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationInvitationsOK, error)
 
-	FindProjectInvitations(params *FindProjectInvitationsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindProjectInvitationsOK, error)
+	FindProjectInvitations(params *FindProjectInvitationsParams, authInfo runtime.ClientAuthInfoWriter) (*FindProjectInvitationsOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -54,12 +51,13 @@ type ClientService interface {
 
   Accept an invitation.
 */
-func (a *Client) AcceptInvitation(params *AcceptInvitationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*AcceptInvitationOK, error) {
+func (a *Client) AcceptInvitation(params *AcceptInvitationParams, authInfo runtime.ClientAuthInfoWriter) (*AcceptInvitationOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewAcceptInvitationParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "acceptInvitation",
 		Method:             "PUT",
 		PathPattern:        "/invitations/{id}",
@@ -71,12 +69,7 @@ func (a *Client) AcceptInvitation(params *AcceptInvitationParams, authInfo runti
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -96,12 +89,13 @@ func (a *Client) AcceptInvitation(params *AcceptInvitationParams, authInfo runti
   In order to add a user to an organization, they must first be invited.
 To invite to several projects the parameter `projects_ids:[a,b,c]` can be used
 */
-func (a *Client) CreateOrganizationInvitation(params *CreateOrganizationInvitationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateOrganizationInvitationCreated, error) {
+func (a *Client) CreateOrganizationInvitation(params *CreateOrganizationInvitationParams, authInfo runtime.ClientAuthInfoWriter) (*CreateOrganizationInvitationCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewCreateOrganizationInvitationParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "createOrganizationInvitation",
 		Method:             "POST",
 		PathPattern:        "/organizations/{id}/invitations",
@@ -113,12 +107,7 @@ func (a *Client) CreateOrganizationInvitation(params *CreateOrganizationInvitati
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -137,12 +126,13 @@ func (a *Client) CreateOrganizationInvitation(params *CreateOrganizationInvitati
 
   In order to add a user to a project, they must first be invited.
 */
-func (a *Client) CreateProjectInvitation(params *CreateProjectInvitationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateProjectInvitationCreated, error) {
+func (a *Client) CreateProjectInvitation(params *CreateProjectInvitationParams, authInfo runtime.ClientAuthInfoWriter) (*CreateProjectInvitationCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewCreateProjectInvitationParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "createProjectInvitation",
 		Method:             "POST",
 		PathPattern:        "/projects/{project_id}/invitations",
@@ -154,12 +144,7 @@ func (a *Client) CreateProjectInvitation(params *CreateProjectInvitationParams, 
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -178,12 +163,13 @@ func (a *Client) CreateProjectInvitation(params *CreateProjectInvitationParams, 
 
   Decline an invitation.
 */
-func (a *Client) DeclineInvitation(params *DeclineInvitationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeclineInvitationNoContent, error) {
+func (a *Client) DeclineInvitation(params *DeclineInvitationParams, authInfo runtime.ClientAuthInfoWriter) (*DeclineInvitationNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeclineInvitationParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "declineInvitation",
 		Method:             "DELETE",
 		PathPattern:        "/invitations/{id}",
@@ -195,12 +181,7 @@ func (a *Client) DeclineInvitation(params *DeclineInvitationParams, authInfo run
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -219,12 +200,13 @@ func (a *Client) DeclineInvitation(params *DeclineInvitationParams, authInfo run
 
   Returns a single invitation. (It include the `invitable` to maintain backward compatibility but will be removed soon)
 */
-func (a *Client) FindInvitationByID(params *FindInvitationByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindInvitationByIDOK, error) {
+func (a *Client) FindInvitationByID(params *FindInvitationByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindInvitationByIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindInvitationByIDParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findInvitationById",
 		Method:             "GET",
 		PathPattern:        "/invitations/{id}",
@@ -236,12 +218,7 @@ func (a *Client) FindInvitationByID(params *FindInvitationByIDParams, authInfo r
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -260,12 +237,13 @@ func (a *Client) FindInvitationByID(params *FindInvitationByIDParams, authInfo r
 
   Returns all invitations in current user.
 */
-func (a *Client) FindInvitations(params *FindInvitationsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindInvitationsOK, error) {
+func (a *Client) FindInvitations(params *FindInvitationsParams, authInfo runtime.ClientAuthInfoWriter) (*FindInvitationsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindInvitationsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findInvitations",
 		Method:             "GET",
 		PathPattern:        "/invitations",
@@ -277,12 +255,7 @@ func (a *Client) FindInvitations(params *FindInvitationsParams, authInfo runtime
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -301,12 +274,13 @@ func (a *Client) FindInvitations(params *FindInvitationsParams, authInfo runtime
 
   Returns all invitations in an organization.
 */
-func (a *Client) FindOrganizationInvitations(params *FindOrganizationInvitationsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationInvitationsOK, error) {
+func (a *Client) FindOrganizationInvitations(params *FindOrganizationInvitationsParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationInvitationsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindOrganizationInvitationsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findOrganizationInvitations",
 		Method:             "GET",
 		PathPattern:        "/organizations/{id}/invitations",
@@ -318,12 +292,7 @@ func (a *Client) FindOrganizationInvitations(params *FindOrganizationInvitations
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -342,12 +311,13 @@ func (a *Client) FindOrganizationInvitations(params *FindOrganizationInvitations
 
   Returns all invitations in a project.
 */
-func (a *Client) FindProjectInvitations(params *FindProjectInvitationsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindProjectInvitationsOK, error) {
+func (a *Client) FindProjectInvitations(params *FindProjectInvitationsParams, authInfo runtime.ClientAuthInfoWriter) (*FindProjectInvitationsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindProjectInvitationsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findProjectInvitations",
 		Method:             "GET",
 		PathPattern:        "/projects/{project_id}/invitations",
@@ -359,12 +329,7 @@ func (a *Client) FindProjectInvitations(params *FindProjectInvitationsParams, au
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

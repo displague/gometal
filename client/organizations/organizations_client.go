@@ -25,34 +25,31 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	CreateOrganization(params *CreateOrganizationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateOrganizationCreated, error)
+	CreateOrganization(params *CreateOrganizationParams, authInfo runtime.ClientAuthInfoWriter) (*CreateOrganizationCreated, error)
 
-	CreateOrganizationProject(params *CreateOrganizationProjectParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateOrganizationProjectCreated, error)
+	CreateOrganizationProject(params *CreateOrganizationProjectParams, authInfo runtime.ClientAuthInfoWriter) (*CreateOrganizationProjectCreated, error)
 
-	CreatePaymentMethod(params *CreatePaymentMethodParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreatePaymentMethodCreated, error)
+	CreatePaymentMethod(params *CreatePaymentMethodParams, authInfo runtime.ClientAuthInfoWriter) (*CreatePaymentMethodCreated, error)
 
-	DeleteOrganization(params *DeleteOrganizationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteOrganizationNoContent, error)
+	DeleteOrganization(params *DeleteOrganizationParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteOrganizationNoContent, error)
 
-	FindOrganizationByID(params *FindOrganizationByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationByIDOK, error)
+	FindOrganizationByID(params *FindOrganizationByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationByIDOK, error)
 
-	FindOrganizationCustomdata(params *FindOrganizationCustomdataParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationCustomdataOK, error)
+	FindOrganizationCustomdata(params *FindOrganizationCustomdataParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationCustomdataOK, error)
 
-	FindOrganizationDevices(params *FindOrganizationDevicesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationDevicesOK, error)
+	FindOrganizationDevices(params *FindOrganizationDevicesParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationDevicesOK, error)
 
-	FindOrganizationPaymentMethods(params *FindOrganizationPaymentMethodsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationPaymentMethodsOK, error)
+	FindOrganizationPaymentMethods(params *FindOrganizationPaymentMethodsParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationPaymentMethodsOK, error)
 
-	FindOrganizationProjects(params *FindOrganizationProjectsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationProjectsOK, error)
+	FindOrganizationProjects(params *FindOrganizationProjectsParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationProjectsOK, error)
 
-	FindOrganizationTransfers(params *FindOrganizationTransfersParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationTransfersOK, error)
+	FindOrganizationTransfers(params *FindOrganizationTransfersParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationTransfersOK, error)
 
-	FindOrganizations(params *FindOrganizationsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationsOK, error)
+	FindOrganizations(params *FindOrganizationsParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationsOK, error)
 
-	UpdateOrganization(params *UpdateOrganizationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdateOrganizationOK, error)
+	UpdateOrganization(params *UpdateOrganizationParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateOrganizationOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -62,12 +59,13 @@ type ClientService interface {
 
   Creates an organization.
 */
-func (a *Client) CreateOrganization(params *CreateOrganizationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateOrganizationCreated, error) {
+func (a *Client) CreateOrganization(params *CreateOrganizationParams, authInfo runtime.ClientAuthInfoWriter) (*CreateOrganizationCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewCreateOrganizationParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "createOrganization",
 		Method:             "POST",
 		PathPattern:        "/organizations",
@@ -79,12 +77,7 @@ func (a *Client) CreateOrganization(params *CreateOrganizationParams, authInfo r
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -103,12 +96,13 @@ func (a *Client) CreateOrganization(params *CreateOrganizationParams, authInfo r
 
   Creates a new project for the organization
 */
-func (a *Client) CreateOrganizationProject(params *CreateOrganizationProjectParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateOrganizationProjectCreated, error) {
+func (a *Client) CreateOrganizationProject(params *CreateOrganizationProjectParams, authInfo runtime.ClientAuthInfoWriter) (*CreateOrganizationProjectCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewCreateOrganizationProjectParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "createOrganizationProject",
 		Method:             "POST",
 		PathPattern:        "/organizations/{id}/projects",
@@ -120,12 +114,7 @@ func (a *Client) CreateOrganizationProject(params *CreateOrganizationProjectPara
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -144,12 +133,13 @@ func (a *Client) CreateOrganizationProject(params *CreateOrganizationProjectPara
 
   Creates a payment method.
 */
-func (a *Client) CreatePaymentMethod(params *CreatePaymentMethodParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreatePaymentMethodCreated, error) {
+func (a *Client) CreatePaymentMethod(params *CreatePaymentMethodParams, authInfo runtime.ClientAuthInfoWriter) (*CreatePaymentMethodCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewCreatePaymentMethodParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "createPaymentMethod",
 		Method:             "POST",
 		PathPattern:        "/organizations/{id}/payment-methods",
@@ -161,12 +151,7 @@ func (a *Client) CreatePaymentMethod(params *CreatePaymentMethodParams, authInfo
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -185,12 +170,13 @@ func (a *Client) CreatePaymentMethod(params *CreatePaymentMethodParams, authInfo
 
   Deletes the organization.
 */
-func (a *Client) DeleteOrganization(params *DeleteOrganizationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteOrganizationNoContent, error) {
+func (a *Client) DeleteOrganization(params *DeleteOrganizationParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteOrganizationNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteOrganizationParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "deleteOrganization",
 		Method:             "DELETE",
 		PathPattern:        "/organizations/{id}",
@@ -202,12 +188,7 @@ func (a *Client) DeleteOrganization(params *DeleteOrganizationParams, authInfo r
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -226,12 +207,13 @@ func (a *Client) DeleteOrganization(params *DeleteOrganizationParams, authInfo r
 
   Returns a single organization's details, if the user is authorized to view it.
 */
-func (a *Client) FindOrganizationByID(params *FindOrganizationByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationByIDOK, error) {
+func (a *Client) FindOrganizationByID(params *FindOrganizationByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationByIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindOrganizationByIDParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findOrganizationById",
 		Method:             "GET",
 		PathPattern:        "/organizations/{id}",
@@ -243,12 +225,7 @@ func (a *Client) FindOrganizationByID(params *FindOrganizationByIDParams, authIn
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -267,12 +244,13 @@ func (a *Client) FindOrganizationByID(params *FindOrganizationByIDParams, authIn
 
   Provides the custom metadata stored for this organization in json format
 */
-func (a *Client) FindOrganizationCustomdata(params *FindOrganizationCustomdataParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationCustomdataOK, error) {
+func (a *Client) FindOrganizationCustomdata(params *FindOrganizationCustomdataParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationCustomdataOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindOrganizationCustomdataParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findOrganizationCustomdata",
 		Method:             "GET",
 		PathPattern:        "/organizations/{id}/customdata",
@@ -284,12 +262,7 @@ func (a *Client) FindOrganizationCustomdata(params *FindOrganizationCustomdataPa
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -308,12 +281,13 @@ func (a *Client) FindOrganizationCustomdata(params *FindOrganizationCustomdataPa
 
   Provides a collection of devices for a given organization.
 */
-func (a *Client) FindOrganizationDevices(params *FindOrganizationDevicesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationDevicesOK, error) {
+func (a *Client) FindOrganizationDevices(params *FindOrganizationDevicesParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationDevicesOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindOrganizationDevicesParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findOrganizationDevices",
 		Method:             "GET",
 		PathPattern:        "/organizations/{id}/devices",
@@ -325,12 +299,7 @@ func (a *Client) FindOrganizationDevices(params *FindOrganizationDevicesParams, 
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -349,12 +318,13 @@ func (a *Client) FindOrganizationDevices(params *FindOrganizationDevicesParams, 
 
   Returns all payment methods of an organization.
 */
-func (a *Client) FindOrganizationPaymentMethods(params *FindOrganizationPaymentMethodsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationPaymentMethodsOK, error) {
+func (a *Client) FindOrganizationPaymentMethods(params *FindOrganizationPaymentMethodsParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationPaymentMethodsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindOrganizationPaymentMethodsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findOrganizationPaymentMethods",
 		Method:             "GET",
 		PathPattern:        "/organizations/{id}/payment-methods",
@@ -366,12 +336,7 @@ func (a *Client) FindOrganizationPaymentMethods(params *FindOrganizationPaymentM
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -390,12 +355,13 @@ func (a *Client) FindOrganizationPaymentMethods(params *FindOrganizationPaymentM
 
   Returns a collection of projects that belong to the organization.
 */
-func (a *Client) FindOrganizationProjects(params *FindOrganizationProjectsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationProjectsOK, error) {
+func (a *Client) FindOrganizationProjects(params *FindOrganizationProjectsParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationProjectsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindOrganizationProjectsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findOrganizationProjects",
 		Method:             "GET",
 		PathPattern:        "/organizations/{id}/projects",
@@ -407,12 +373,7 @@ func (a *Client) FindOrganizationProjects(params *FindOrganizationProjectsParams
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -431,12 +392,13 @@ func (a *Client) FindOrganizationProjects(params *FindOrganizationProjectsParams
 
   Provides a collection of project transfer requests from or to the organization.
 */
-func (a *Client) FindOrganizationTransfers(params *FindOrganizationTransfersParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationTransfersOK, error) {
+func (a *Client) FindOrganizationTransfers(params *FindOrganizationTransfersParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationTransfersOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindOrganizationTransfersParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findOrganizationTransfers",
 		Method:             "GET",
 		PathPattern:        "/organizations/{id}/transfers",
@@ -448,12 +410,7 @@ func (a *Client) FindOrganizationTransfers(params *FindOrganizationTransfersPara
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -472,12 +429,13 @@ func (a *Client) FindOrganizationTransfers(params *FindOrganizationTransfersPara
 
   Returns a list of organizations that are accessible to the current user.
 */
-func (a *Client) FindOrganizations(params *FindOrganizationsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationsOK, error) {
+func (a *Client) FindOrganizations(params *FindOrganizationsParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindOrganizationsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findOrganizations",
 		Method:             "GET",
 		PathPattern:        "/organizations",
@@ -489,12 +447,7 @@ func (a *Client) FindOrganizations(params *FindOrganizationsParams, authInfo run
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -513,12 +466,13 @@ func (a *Client) FindOrganizations(params *FindOrganizationsParams, authInfo run
 
   Updates the organization.
 */
-func (a *Client) UpdateOrganization(params *UpdateOrganizationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdateOrganizationOK, error) {
+func (a *Client) UpdateOrganization(params *UpdateOrganizationParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateOrganizationOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewUpdateOrganizationParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "updateOrganization",
 		Method:             "PUT",
 		PathPattern:        "/organizations/{id}",
@@ -530,12 +484,7 @@ func (a *Client) UpdateOrganization(params *UpdateOrganizationParams, authInfo r
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

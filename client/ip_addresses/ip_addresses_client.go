@@ -25,18 +25,15 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DeleteIPAddress(params *DeleteIPAddressParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteIPAddressNoContent, error)
+	DeleteIPAddress(params *DeleteIPAddressParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteIPAddressNoContent, error)
 
-	FindIPAddressByID(params *FindIPAddressByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindIPAddressByIDOK, error)
+	FindIPAddressByID(params *FindIPAddressByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindIPAddressByIDOK, error)
 
-	FindIPAddressCustomdata(params *FindIPAddressCustomdataParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindIPAddressCustomdataOK, error)
+	FindIPAddressCustomdata(params *FindIPAddressCustomdataParams, authInfo runtime.ClientAuthInfoWriter) (*FindIPAddressCustomdataOK, error)
 
-	FindIPAvailabilities(params *FindIPAvailabilitiesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindIPAvailabilitiesOK, error)
+	FindIPAvailabilities(params *FindIPAvailabilitiesParams, authInfo runtime.ClientAuthInfoWriter) (*FindIPAvailabilitiesOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -46,12 +43,13 @@ type ClientService interface {
 
   Note! This call can be used to un-assign an IP assignment or delete an IP reservation. Un-assign an IP address record. Use the assignment UUID you get after attaching the IP. This will remove the relationship between an IP and the device and will make the IP address available to be assigned to another device. Delete and IP reservation. Use the reservation UUID you get after adding the IP to the project. This will permanently delete the IP block reservation from the project.
 */
-func (a *Client) DeleteIPAddress(params *DeleteIPAddressParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteIPAddressNoContent, error) {
+func (a *Client) DeleteIPAddress(params *DeleteIPAddressParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteIPAddressNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteIPAddressParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "deleteIPAddress",
 		Method:             "DELETE",
 		PathPattern:        "/ips/{id}",
@@ -63,12 +61,7 @@ func (a *Client) DeleteIPAddress(params *DeleteIPAddressParams, authInfo runtime
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -87,12 +80,13 @@ func (a *Client) DeleteIPAddress(params *DeleteIPAddressParams, authInfo runtime
 
   Returns a single ip address if the user has access.
 */
-func (a *Client) FindIPAddressByID(params *FindIPAddressByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindIPAddressByIDOK, error) {
+func (a *Client) FindIPAddressByID(params *FindIPAddressByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindIPAddressByIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindIPAddressByIDParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findIPAddressById",
 		Method:             "GET",
 		PathPattern:        "/ips/{id}",
@@ -104,12 +98,7 @@ func (a *Client) FindIPAddressByID(params *FindIPAddressByIDParams, authInfo run
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -128,12 +117,13 @@ func (a *Client) FindIPAddressByID(params *FindIPAddressByIDParams, authInfo run
 
   Provides the custom metadata stored for this IP Reservation or IP Assignment in json format
 */
-func (a *Client) FindIPAddressCustomdata(params *FindIPAddressCustomdataParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindIPAddressCustomdataOK, error) {
+func (a *Client) FindIPAddressCustomdata(params *FindIPAddressCustomdataParams, authInfo runtime.ClientAuthInfoWriter) (*FindIPAddressCustomdataOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindIPAddressCustomdataParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findIPAddressCustomdata",
 		Method:             "GET",
 		PathPattern:        "/ips/{id}/customdata",
@@ -145,12 +135,7 @@ func (a *Client) FindIPAddressCustomdata(params *FindIPAddressCustomdataParams, 
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -169,12 +154,13 @@ func (a *Client) FindIPAddressCustomdata(params *FindIPAddressCustomdataParams, 
 
   Provides a list of IP resevations for a single project.
 */
-func (a *Client) FindIPAvailabilities(params *FindIPAvailabilitiesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindIPAvailabilitiesOK, error) {
+func (a *Client) FindIPAvailabilities(params *FindIPAvailabilitiesParams, authInfo runtime.ClientAuthInfoWriter) (*FindIPAvailabilitiesOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindIPAvailabilitiesParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findIPAvailabilities",
 		Method:             "GET",
 		PathPattern:        "/ips/{id}/available",
@@ -186,12 +172,7 @@ func (a *Client) FindIPAvailabilities(params *FindIPAvailabilitiesParams, authIn
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

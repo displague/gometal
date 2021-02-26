@@ -25,12 +25,9 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	GetIncidents(params *GetIncidentsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetIncidentsOK, error)
+	GetIncidents(params *GetIncidentsParams, authInfo runtime.ClientAuthInfoWriter) (*GetIncidentsOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -40,12 +37,13 @@ type ClientService interface {
 
   Retrieve the number of incidents.
 */
-func (a *Client) GetIncidents(params *GetIncidentsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetIncidentsOK, error) {
+func (a *Client) GetIncidents(params *GetIncidentsParams, authInfo runtime.ClientAuthInfoWriter) (*GetIncidentsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetIncidentsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "GetIncidents",
 		Method:             "GET",
 		PathPattern:        "/incidents",
@@ -57,12 +55,7 @@ func (a *Client) GetIncidents(params *GetIncidentsParams, authInfo runtime.Clien
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

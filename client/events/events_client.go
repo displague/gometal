@@ -25,28 +25,25 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	FindConnectionEvents(params *FindConnectionEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindConnectionEventsOK, error)
+	FindConnectionEvents(params *FindConnectionEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindConnectionEventsOK, error)
 
-	FindConnectionPortEvents(params *FindConnectionPortEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindConnectionPortEventsOK, error)
+	FindConnectionPortEvents(params *FindConnectionPortEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindConnectionPortEventsOK, error)
 
-	FindDeviceEvents(params *FindDeviceEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDeviceEventsOK, error)
+	FindDeviceEvents(params *FindDeviceEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindDeviceEventsOK, error)
 
-	FindEventByID(params *FindEventByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindEventByIDOK, error)
+	FindEventByID(params *FindEventByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindEventByIDOK, error)
 
-	FindEvents(params *FindEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindEventsOK, error)
+	FindEvents(params *FindEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindEventsOK, error)
 
-	FindOrganizationEvents(params *FindOrganizationEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationEventsOK, error)
+	FindOrganizationEvents(params *FindOrganizationEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationEventsOK, error)
 
-	FindProjectEvents(params *FindProjectEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindProjectEventsOK, error)
+	FindProjectEvents(params *FindProjectEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindProjectEventsOK, error)
 
-	FindVirtualCircuitEvents(params *FindVirtualCircuitEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindVirtualCircuitEventsOK, error)
+	FindVirtualCircuitEvents(params *FindVirtualCircuitEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindVirtualCircuitEventsOK, error)
 
-	FindVolumeEvents(params *FindVolumeEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindVolumeEventsOK, error)
+	FindVolumeEvents(params *FindVolumeEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindVolumeEventsOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -56,12 +53,13 @@ type ClientService interface {
 
   Returns a list of the connection events
 */
-func (a *Client) FindConnectionEvents(params *FindConnectionEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindConnectionEventsOK, error) {
+func (a *Client) FindConnectionEvents(params *FindConnectionEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindConnectionEventsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindConnectionEventsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findConnectionEvents",
 		Method:             "GET",
 		PathPattern:        "/connections/{connection_id}/events",
@@ -73,12 +71,7 @@ func (a *Client) FindConnectionEvents(params *FindConnectionEventsParams, authIn
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -97,12 +90,13 @@ func (a *Client) FindConnectionEvents(params *FindConnectionEventsParams, authIn
 
   Returns a list of the connection port events
 */
-func (a *Client) FindConnectionPortEvents(params *FindConnectionPortEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindConnectionPortEventsOK, error) {
+func (a *Client) FindConnectionPortEvents(params *FindConnectionPortEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindConnectionPortEventsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindConnectionPortEventsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findConnectionPortEvents",
 		Method:             "GET",
 		PathPattern:        "/connections/{connection_id}/ports/{id}/events",
@@ -114,12 +108,7 @@ func (a *Client) FindConnectionPortEvents(params *FindConnectionPortEventsParams
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -138,12 +127,13 @@ func (a *Client) FindConnectionPortEvents(params *FindConnectionPortEventsParams
 
   Returns a list of events pertaining to a specific device
 */
-func (a *Client) FindDeviceEvents(params *FindDeviceEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDeviceEventsOK, error) {
+func (a *Client) FindDeviceEvents(params *FindDeviceEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindDeviceEventsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindDeviceEventsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findDeviceEvents",
 		Method:             "GET",
 		PathPattern:        "/devices/{id}/events",
@@ -155,12 +145,7 @@ func (a *Client) FindDeviceEvents(params *FindDeviceEventsParams, authInfo runti
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -179,12 +164,13 @@ func (a *Client) FindDeviceEvents(params *FindDeviceEventsParams, authInfo runti
 
   Returns a single event if the user has access
 */
-func (a *Client) FindEventByID(params *FindEventByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindEventByIDOK, error) {
+func (a *Client) FindEventByID(params *FindEventByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindEventByIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindEventByIDParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findEventById",
 		Method:             "GET",
 		PathPattern:        "/events/{id}",
@@ -196,12 +182,7 @@ func (a *Client) FindEventByID(params *FindEventByIDParams, authInfo runtime.Cli
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -220,12 +201,13 @@ func (a *Client) FindEventByID(params *FindEventByIDParams, authInfo runtime.Cli
 
   Returns a list of the current user’s events
 */
-func (a *Client) FindEvents(params *FindEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindEventsOK, error) {
+func (a *Client) FindEvents(params *FindEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindEventsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindEventsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findEvents",
 		Method:             "GET",
 		PathPattern:        "/events",
@@ -237,12 +219,7 @@ func (a *Client) FindEvents(params *FindEventsParams, authInfo runtime.ClientAut
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -261,12 +238,13 @@ func (a *Client) FindEvents(params *FindEventsParams, authInfo runtime.ClientAut
 
   Returns a list of events for a single organization
 */
-func (a *Client) FindOrganizationEvents(params *FindOrganizationEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOrganizationEventsOK, error) {
+func (a *Client) FindOrganizationEvents(params *FindOrganizationEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindOrganizationEventsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindOrganizationEventsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findOrganizationEvents",
 		Method:             "GET",
 		PathPattern:        "/organizations/{id}/events",
@@ -278,12 +256,7 @@ func (a *Client) FindOrganizationEvents(params *FindOrganizationEventsParams, au
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -302,12 +275,13 @@ func (a *Client) FindOrganizationEvents(params *FindOrganizationEventsParams, au
 
   Returns a list of events for a single project
 */
-func (a *Client) FindProjectEvents(params *FindProjectEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindProjectEventsOK, error) {
+func (a *Client) FindProjectEvents(params *FindProjectEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindProjectEventsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindProjectEventsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findProjectEvents",
 		Method:             "GET",
 		PathPattern:        "/projects/{id}/events",
@@ -319,12 +293,7 @@ func (a *Client) FindProjectEvents(params *FindProjectEventsParams, authInfo run
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -343,12 +312,13 @@ func (a *Client) FindProjectEvents(params *FindProjectEventsParams, authInfo run
 
   Returns a list of the virtual circuit events
 */
-func (a *Client) FindVirtualCircuitEvents(params *FindVirtualCircuitEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindVirtualCircuitEventsOK, error) {
+func (a *Client) FindVirtualCircuitEvents(params *FindVirtualCircuitEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindVirtualCircuitEventsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindVirtualCircuitEventsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findVirtualCircuitEvents",
 		Method:             "GET",
 		PathPattern:        "/virtual-circuit/{id}/events",
@@ -360,12 +330,7 @@ func (a *Client) FindVirtualCircuitEvents(params *FindVirtualCircuitEventsParams
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -384,12 +349,13 @@ func (a *Client) FindVirtualCircuitEvents(params *FindVirtualCircuitEventsParams
 
   Returns a list of the current volume’s events
 */
-func (a *Client) FindVolumeEvents(params *FindVolumeEventsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindVolumeEventsOK, error) {
+func (a *Client) FindVolumeEvents(params *FindVolumeEventsParams, authInfo runtime.ClientAuthInfoWriter) (*FindVolumeEventsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindVolumeEventsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findVolumeEvents",
 		Method:             "GET",
 		PathPattern:        "/volumes/{id}/events",
@@ -401,12 +367,7 @@ func (a *Client) FindVolumeEvents(params *FindVolumeEventsParams, authInfo runti
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

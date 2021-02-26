@@ -25,14 +25,11 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DeleteBatch(params *DeleteBatchParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteBatchNoContent, error)
+	DeleteBatch(params *DeleteBatchParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteBatchNoContent, error)
 
-	FindBatchByID(params *FindBatchByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindBatchByIDOK, error)
+	FindBatchByID(params *FindBatchByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindBatchByIDOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -42,12 +39,13 @@ type ClientService interface {
 
   Deletes the Batch.
 */
-func (a *Client) DeleteBatch(params *DeleteBatchParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteBatchNoContent, error) {
+func (a *Client) DeleteBatch(params *DeleteBatchParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteBatchNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteBatchParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "deleteBatch",
 		Method:             "DELETE",
 		PathPattern:        "/batches/{id}",
@@ -59,12 +57,7 @@ func (a *Client) DeleteBatch(params *DeleteBatchParams, authInfo runtime.ClientA
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -83,12 +76,13 @@ func (a *Client) DeleteBatch(params *DeleteBatchParams, authInfo runtime.ClientA
 
   Returns a Batch
 */
-func (a *Client) FindBatchByID(params *FindBatchByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindBatchByIDOK, error) {
+func (a *Client) FindBatchByID(params *FindBatchByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindBatchByIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindBatchByIDParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findBatchById",
 		Method:             "GET",
 		PathPattern:        "/batches/{id}",
@@ -100,12 +94,7 @@ func (a *Client) FindBatchByID(params *FindBatchByIDParams, authInfo runtime.Cli
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

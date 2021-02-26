@@ -25,14 +25,11 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	PostHardwareReservationsIDMove(params *PostHardwareReservationsIDMoveParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostHardwareReservationsIDMoveCreated, error)
+	PostHardwareReservationsIDMove(params *PostHardwareReservationsIDMoveParams, authInfo runtime.ClientAuthInfoWriter) (*PostHardwareReservationsIDMoveCreated, error)
 
-	FindHardwareReservationByID(params *FindHardwareReservationByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindHardwareReservationByIDOK, error)
+	FindHardwareReservationByID(params *FindHardwareReservationByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindHardwareReservationByIDOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -42,12 +39,13 @@ type ClientService interface {
 
   Move a hardware reservation to another project
 */
-func (a *Client) PostHardwareReservationsIDMove(params *PostHardwareReservationsIDMoveParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostHardwareReservationsIDMoveCreated, error) {
+func (a *Client) PostHardwareReservationsIDMove(params *PostHardwareReservationsIDMoveParams, authInfo runtime.ClientAuthInfoWriter) (*PostHardwareReservationsIDMoveCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPostHardwareReservationsIDMoveParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "PostHardwareReservationsIDMove",
 		Method:             "POST",
 		PathPattern:        "/hardware-reservations/{id}/move",
@@ -59,12 +57,7 @@ func (a *Client) PostHardwareReservationsIDMove(params *PostHardwareReservations
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -83,12 +76,13 @@ func (a *Client) PostHardwareReservationsIDMove(params *PostHardwareReservations
 
   Returns a single hardware reservation
 */
-func (a *Client) FindHardwareReservationByID(params *FindHardwareReservationByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindHardwareReservationByIDOK, error) {
+func (a *Client) FindHardwareReservationByID(params *FindHardwareReservationByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindHardwareReservationByIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindHardwareReservationByIDParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findHardwareReservationById",
 		Method:             "GET",
 		PathPattern:        "/hardware-reservations/{id}",
@@ -100,12 +94,7 @@ func (a *Client) FindHardwareReservationByID(params *FindHardwareReservationByID
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

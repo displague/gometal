@@ -25,16 +25,13 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DeletePaymentMethod(params *DeletePaymentMethodParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeletePaymentMethodNoContent, error)
+	DeletePaymentMethod(params *DeletePaymentMethodParams, authInfo runtime.ClientAuthInfoWriter) (*DeletePaymentMethodNoContent, error)
 
-	FindPaymentMethodByID(params *FindPaymentMethodByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindPaymentMethodByIDOK, error)
+	FindPaymentMethodByID(params *FindPaymentMethodByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindPaymentMethodByIDOK, error)
 
-	UpdatePaymentMethod(params *UpdatePaymentMethodParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdatePaymentMethodOK, error)
+	UpdatePaymentMethod(params *UpdatePaymentMethodParams, authInfo runtime.ClientAuthInfoWriter) (*UpdatePaymentMethodOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -44,12 +41,13 @@ type ClientService interface {
 
   Deletes the payment method.
 */
-func (a *Client) DeletePaymentMethod(params *DeletePaymentMethodParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeletePaymentMethodNoContent, error) {
+func (a *Client) DeletePaymentMethod(params *DeletePaymentMethodParams, authInfo runtime.ClientAuthInfoWriter) (*DeletePaymentMethodNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeletePaymentMethodParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "deletePaymentMethod",
 		Method:             "DELETE",
 		PathPattern:        "/payment-methods/{id}",
@@ -61,12 +59,7 @@ func (a *Client) DeletePaymentMethod(params *DeletePaymentMethodParams, authInfo
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -85,12 +78,13 @@ func (a *Client) DeletePaymentMethod(params *DeletePaymentMethodParams, authInfo
 
   Returns a payment method
 */
-func (a *Client) FindPaymentMethodByID(params *FindPaymentMethodByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindPaymentMethodByIDOK, error) {
+func (a *Client) FindPaymentMethodByID(params *FindPaymentMethodByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindPaymentMethodByIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindPaymentMethodByIDParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findPaymentMethodById",
 		Method:             "GET",
 		PathPattern:        "/payment-methods/{id}",
@@ -102,12 +96,7 @@ func (a *Client) FindPaymentMethodByID(params *FindPaymentMethodByIDParams, auth
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -126,12 +115,13 @@ func (a *Client) FindPaymentMethodByID(params *FindPaymentMethodByIDParams, auth
 
   Updates the payment method.
 */
-func (a *Client) UpdatePaymentMethod(params *UpdatePaymentMethodParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdatePaymentMethodOK, error) {
+func (a *Client) UpdatePaymentMethod(params *UpdatePaymentMethodParams, authInfo runtime.ClientAuthInfoWriter) (*UpdatePaymentMethodOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewUpdatePaymentMethodParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "updatePaymentMethod",
 		Method:             "PUT",
 		PathPattern:        "/payment-methods/{id}",
@@ -143,12 +133,7 @@ func (a *Client) UpdatePaymentMethod(params *UpdatePaymentMethodParams, authInfo
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

@@ -25,14 +25,11 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	FindOperatingSystems(params *FindOperatingSystemsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOperatingSystemsOK, error)
+	FindOperatingSystems(params *FindOperatingSystemsParams, authInfo runtime.ClientAuthInfoWriter) (*FindOperatingSystemsOK, error)
 
-	FindOperatingSystemsByOrganization(params *FindOperatingSystemsByOrganizationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOperatingSystemsByOrganizationOK, error)
+	FindOperatingSystemsByOrganization(params *FindOperatingSystemsByOrganizationParams, authInfo runtime.ClientAuthInfoWriter) (*FindOperatingSystemsByOrganizationOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -42,12 +39,13 @@ type ClientService interface {
 
   Provides a listing of available operating systems to provision your new device with.
 */
-func (a *Client) FindOperatingSystems(params *FindOperatingSystemsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOperatingSystemsOK, error) {
+func (a *Client) FindOperatingSystems(params *FindOperatingSystemsParams, authInfo runtime.ClientAuthInfoWriter) (*FindOperatingSystemsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindOperatingSystemsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findOperatingSystems",
 		Method:             "GET",
 		PathPattern:        "/operating-systems",
@@ -59,12 +57,7 @@ func (a *Client) FindOperatingSystems(params *FindOperatingSystemsParams, authIn
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -83,12 +76,13 @@ func (a *Client) FindOperatingSystems(params *FindOperatingSystemsParams, authIn
 
   Returns a listing of available operating systems for the given organization
 */
-func (a *Client) FindOperatingSystemsByOrganization(params *FindOperatingSystemsByOrganizationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindOperatingSystemsByOrganizationOK, error) {
+func (a *Client) FindOperatingSystemsByOrganization(params *FindOperatingSystemsByOrganizationParams, authInfo runtime.ClientAuthInfoWriter) (*FindOperatingSystemsByOrganizationOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindOperatingSystemsByOrganizationParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findOperatingSystemsByOrganization",
 		Method:             "GET",
 		PathPattern:        "/organizations/{id}/operating-systems",
@@ -100,12 +94,7 @@ func (a *Client) FindOperatingSystemsByOrganization(params *FindOperatingSystems
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

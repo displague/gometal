@@ -25,18 +25,15 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	CreateEmail(params *CreateEmailParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateEmailCreated, error)
+	CreateEmail(params *CreateEmailParams, authInfo runtime.ClientAuthInfoWriter) (*CreateEmailCreated, error)
 
-	DeleteEmail(params *DeleteEmailParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteEmailNoContent, error)
+	DeleteEmail(params *DeleteEmailParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteEmailNoContent, error)
 
-	FindEmailByID(params *FindEmailByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindEmailByIDOK, error)
+	FindEmailByID(params *FindEmailByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindEmailByIDOK, error)
 
-	UpdateEmail(params *UpdateEmailParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdateEmailOK, error)
+	UpdateEmail(params *UpdateEmailParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateEmailOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -46,12 +43,13 @@ type ClientService interface {
 
   Add a new email address to the current user.
 */
-func (a *Client) CreateEmail(params *CreateEmailParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateEmailCreated, error) {
+func (a *Client) CreateEmail(params *CreateEmailParams, authInfo runtime.ClientAuthInfoWriter) (*CreateEmailCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewCreateEmailParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "createEmail",
 		Method:             "POST",
 		PathPattern:        "/emails",
@@ -63,12 +61,7 @@ func (a *Client) CreateEmail(params *CreateEmailParams, authInfo runtime.ClientA
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -87,12 +80,13 @@ func (a *Client) CreateEmail(params *CreateEmailParams, authInfo runtime.ClientA
 
   Deletes the email.
 */
-func (a *Client) DeleteEmail(params *DeleteEmailParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteEmailNoContent, error) {
+func (a *Client) DeleteEmail(params *DeleteEmailParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteEmailNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteEmailParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "deleteEmail",
 		Method:             "DELETE",
 		PathPattern:        "/emails/{id}",
@@ -104,12 +98,7 @@ func (a *Client) DeleteEmail(params *DeleteEmailParams, authInfo runtime.ClientA
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -128,12 +117,13 @@ func (a *Client) DeleteEmail(params *DeleteEmailParams, authInfo runtime.ClientA
 
   Provides one of the user’s emails.
 */
-func (a *Client) FindEmailByID(params *FindEmailByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindEmailByIDOK, error) {
+func (a *Client) FindEmailByID(params *FindEmailByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindEmailByIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindEmailByIDParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findEmailById",
 		Method:             "GET",
 		PathPattern:        "/emails/{id}",
@@ -145,12 +135,7 @@ func (a *Client) FindEmailByID(params *FindEmailByIDParams, authInfo runtime.Cli
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -169,12 +154,13 @@ func (a *Client) FindEmailByID(params *FindEmailByIDParams, authInfo runtime.Cli
 
   Updates the email.
 */
-func (a *Client) UpdateEmail(params *UpdateEmailParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdateEmailOK, error) {
+func (a *Client) UpdateEmail(params *UpdateEmailParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateEmailOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewUpdateEmailParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "updateEmail",
 		Method:             "PUT",
 		PathPattern:        "/emails/{id}",
@@ -186,12 +172,7 @@ func (a *Client) UpdateEmail(params *UpdateEmailParams, authInfo runtime.ClientA
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

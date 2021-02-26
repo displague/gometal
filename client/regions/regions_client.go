@@ -25,12 +25,9 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	FindRegions(params *FindRegionsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindRegionsOK, error)
+	FindRegions(params *FindRegionsParams, authInfo runtime.ClientAuthInfoWriter) (*FindRegionsOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -40,12 +37,13 @@ type ClientService interface {
 
   Returns all regions.
 */
-func (a *Client) FindRegions(params *FindRegionsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindRegionsOK, error) {
+func (a *Client) FindRegions(params *FindRegionsParams, authInfo runtime.ClientAuthInfoWriter) (*FindRegionsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindRegionsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findRegions",
 		Method:             "GET",
 		PathPattern:        "/regions",
@@ -57,12 +55,7 @@ func (a *Client) FindRegions(params *FindRegionsParams, authInfo runtime.ClientA
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

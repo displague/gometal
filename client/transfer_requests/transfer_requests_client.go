@@ -25,16 +25,13 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	AcceptTransferRequest(params *AcceptTransferRequestParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*AcceptTransferRequestNoContent, error)
+	AcceptTransferRequest(params *AcceptTransferRequestParams, authInfo runtime.ClientAuthInfoWriter) (*AcceptTransferRequestNoContent, error)
 
-	DeclineTransferRequest(params *DeclineTransferRequestParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeclineTransferRequestNoContent, error)
+	DeclineTransferRequest(params *DeclineTransferRequestParams, authInfo runtime.ClientAuthInfoWriter) (*DeclineTransferRequestNoContent, error)
 
-	FindTransferRequestByID(params *FindTransferRequestByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindTransferRequestByIDOK, error)
+	FindTransferRequestByID(params *FindTransferRequestByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindTransferRequestByIDOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -44,12 +41,13 @@ type ClientService interface {
 
   Accept a transfer request.
 */
-func (a *Client) AcceptTransferRequest(params *AcceptTransferRequestParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*AcceptTransferRequestNoContent, error) {
+func (a *Client) AcceptTransferRequest(params *AcceptTransferRequestParams, authInfo runtime.ClientAuthInfoWriter) (*AcceptTransferRequestNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewAcceptTransferRequestParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "acceptTransferRequest",
 		Method:             "PUT",
 		PathPattern:        "/transfers/{id}",
@@ -61,12 +59,7 @@ func (a *Client) AcceptTransferRequest(params *AcceptTransferRequestParams, auth
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -85,12 +78,13 @@ func (a *Client) AcceptTransferRequest(params *AcceptTransferRequestParams, auth
 
   Decline a transfer request.
 */
-func (a *Client) DeclineTransferRequest(params *DeclineTransferRequestParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeclineTransferRequestNoContent, error) {
+func (a *Client) DeclineTransferRequest(params *DeclineTransferRequestParams, authInfo runtime.ClientAuthInfoWriter) (*DeclineTransferRequestNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeclineTransferRequestParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "declineTransferRequest",
 		Method:             "DELETE",
 		PathPattern:        "/transfers/{id}",
@@ -102,12 +96,7 @@ func (a *Client) DeclineTransferRequest(params *DeclineTransferRequestParams, au
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -126,12 +115,13 @@ func (a *Client) DeclineTransferRequest(params *DeclineTransferRequestParams, au
 
   Returns a single transfer request.
 */
-func (a *Client) FindTransferRequestByID(params *FindTransferRequestByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindTransferRequestByIDOK, error) {
+func (a *Client) FindTransferRequestByID(params *FindTransferRequestByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindTransferRequestByIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindTransferRequestByIDParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findTransferRequestById",
 		Method:             "GET",
 		PathPattern:        "/transfers/{id}",
@@ -143,12 +133,7 @@ func (a *Client) FindTransferRequestByID(params *FindTransferRequestByIDParams, 
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

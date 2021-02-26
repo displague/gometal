@@ -25,16 +25,13 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DeleteLicense(params *DeleteLicenseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteLicenseNoContent, error)
+	DeleteLicense(params *DeleteLicenseParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteLicenseNoContent, error)
 
-	FindLicenseByID(params *FindLicenseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindLicenseByIDOK, error)
+	FindLicenseByID(params *FindLicenseByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindLicenseByIDOK, error)
 
-	UpdateLicense(params *UpdateLicenseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdateLicenseOK, error)
+	UpdateLicense(params *UpdateLicenseParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateLicenseOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -44,12 +41,13 @@ type ClientService interface {
 
   Deletes a license.
 */
-func (a *Client) DeleteLicense(params *DeleteLicenseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteLicenseNoContent, error) {
+func (a *Client) DeleteLicense(params *DeleteLicenseParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteLicenseNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteLicenseParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "deleteLicense",
 		Method:             "DELETE",
 		PathPattern:        "/licenses/{id}",
@@ -61,12 +59,7 @@ func (a *Client) DeleteLicense(params *DeleteLicenseParams, authInfo runtime.Cli
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -85,12 +78,13 @@ func (a *Client) DeleteLicense(params *DeleteLicenseParams, authInfo runtime.Cli
 
   Returns a license
 */
-func (a *Client) FindLicenseByID(params *FindLicenseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindLicenseByIDOK, error) {
+func (a *Client) FindLicenseByID(params *FindLicenseByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindLicenseByIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindLicenseByIDParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findLicenseById",
 		Method:             "GET",
 		PathPattern:        "/licenses/{id}",
@@ -102,12 +96,7 @@ func (a *Client) FindLicenseByID(params *FindLicenseByIDParams, authInfo runtime
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -126,12 +115,13 @@ func (a *Client) FindLicenseByID(params *FindLicenseByIDParams, authInfo runtime
 
   Updates the license.
 */
-func (a *Client) UpdateLicense(params *UpdateLicenseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdateLicenseOK, error) {
+func (a *Client) UpdateLicense(params *UpdateLicenseParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateLicenseOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewUpdateLicenseParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "updateLicense",
 		Method:             "PUT",
 		PathPattern:        "/licenses/{id}",
@@ -143,12 +133,7 @@ func (a *Client) UpdateLicense(params *UpdateLicenseParams, authInfo runtime.Cli
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

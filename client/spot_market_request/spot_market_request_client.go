@@ -25,14 +25,11 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DeleteSpotMarketRequest(params *DeleteSpotMarketRequestParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteSpotMarketRequestNoContent, error)
+	DeleteSpotMarketRequest(params *DeleteSpotMarketRequestParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSpotMarketRequestNoContent, error)
 
-	FindSpotMarketRequestByID(params *FindSpotMarketRequestByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindSpotMarketRequestByIDOK, error)
+	FindSpotMarketRequestByID(params *FindSpotMarketRequestByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindSpotMarketRequestByIDOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -42,12 +39,13 @@ type ClientService interface {
 
   Deletes the spot market request.
 */
-func (a *Client) DeleteSpotMarketRequest(params *DeleteSpotMarketRequestParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteSpotMarketRequestNoContent, error) {
+func (a *Client) DeleteSpotMarketRequest(params *DeleteSpotMarketRequestParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSpotMarketRequestNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteSpotMarketRequestParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "deleteSpotMarketRequest",
 		Method:             "DELETE",
 		PathPattern:        "/spot-market-requests/{id}",
@@ -59,12 +57,7 @@ func (a *Client) DeleteSpotMarketRequest(params *DeleteSpotMarketRequestParams, 
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -83,12 +76,13 @@ func (a *Client) DeleteSpotMarketRequest(params *DeleteSpotMarketRequestParams, 
 
   Returns a single spot market request
 */
-func (a *Client) FindSpotMarketRequestByID(params *FindSpotMarketRequestByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindSpotMarketRequestByIDOK, error) {
+func (a *Client) FindSpotMarketRequestByID(params *FindSpotMarketRequestByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindSpotMarketRequestByIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindSpotMarketRequestByIDParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findSpotMarketRequestById",
 		Method:             "GET",
 		PathPattern:        "/spot-market-requests/{id}",
@@ -100,12 +94,7 @@ func (a *Client) FindSpotMarketRequestByID(params *FindSpotMarketRequestByIDPara
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

@@ -25,18 +25,15 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DisableTfaApp(params *DisableTfaAppParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DisableTfaAppNoContent, error)
+	DisableTfaApp(params *DisableTfaAppParams, authInfo runtime.ClientAuthInfoWriter) (*DisableTfaAppNoContent, error)
 
-	DisableTfaSms(params *DisableTfaSmsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DisableTfaSmsNoContent, error)
+	DisableTfaSms(params *DisableTfaSmsParams, authInfo runtime.ClientAuthInfoWriter) (*DisableTfaSmsNoContent, error)
 
-	EnableTfaApp(params *EnableTfaAppParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*EnableTfaAppOK, error)
+	EnableTfaApp(params *EnableTfaAppParams, authInfo runtime.ClientAuthInfoWriter) (*EnableTfaAppOK, error)
 
-	EnableTfaSms(params *EnableTfaSmsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*EnableTfaSmsOK, error)
+	EnableTfaSms(params *EnableTfaSmsParams, authInfo runtime.ClientAuthInfoWriter) (*EnableTfaSmsOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -46,12 +43,13 @@ type ClientService interface {
 
   Disables two factor authentication.
 */
-func (a *Client) DisableTfaApp(params *DisableTfaAppParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DisableTfaAppNoContent, error) {
+func (a *Client) DisableTfaApp(params *DisableTfaAppParams, authInfo runtime.ClientAuthInfoWriter) (*DisableTfaAppNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDisableTfaAppParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "disableTfaApp",
 		Method:             "DELETE",
 		PathPattern:        "/user/otp/app",
@@ -63,12 +61,7 @@ func (a *Client) DisableTfaApp(params *DisableTfaAppParams, authInfo runtime.Cli
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -87,12 +80,13 @@ func (a *Client) DisableTfaApp(params *DisableTfaAppParams, authInfo runtime.Cli
 
   Disables two factor authentication.
 */
-func (a *Client) DisableTfaSms(params *DisableTfaSmsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DisableTfaSmsNoContent, error) {
+func (a *Client) DisableTfaSms(params *DisableTfaSmsParams, authInfo runtime.ClientAuthInfoWriter) (*DisableTfaSmsNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDisableTfaSmsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "disableTfaSms",
 		Method:             "DELETE",
 		PathPattern:        "/user/otp/sms",
@@ -104,12 +98,7 @@ func (a *Client) DisableTfaSms(params *DisableTfaSmsParams, authInfo runtime.Cli
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -128,12 +117,13 @@ func (a *Client) DisableTfaSms(params *DisableTfaSmsParams, authInfo runtime.Cli
 
   Enables two factor authentication using authenticator app.
 */
-func (a *Client) EnableTfaApp(params *EnableTfaAppParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*EnableTfaAppOK, error) {
+func (a *Client) EnableTfaApp(params *EnableTfaAppParams, authInfo runtime.ClientAuthInfoWriter) (*EnableTfaAppOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewEnableTfaAppParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "enableTfaApp",
 		Method:             "POST",
 		PathPattern:        "/user/otp/app",
@@ -145,12 +135,7 @@ func (a *Client) EnableTfaApp(params *EnableTfaAppParams, authInfo runtime.Clien
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -169,12 +154,13 @@ func (a *Client) EnableTfaApp(params *EnableTfaAppParams, authInfo runtime.Clien
 
   Enables two factor authentication with sms.
 */
-func (a *Client) EnableTfaSms(params *EnableTfaSmsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*EnableTfaSmsOK, error) {
+func (a *Client) EnableTfaSms(params *EnableTfaSmsParams, authInfo runtime.ClientAuthInfoWriter) (*EnableTfaSmsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewEnableTfaSmsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "enableTfaSms",
 		Method:             "POST",
 		PathPattern:        "/user/otp/sms",
@@ -186,12 +172,7 @@ func (a *Client) EnableTfaSms(params *EnableTfaSmsParams, authInfo runtime.Clien
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}

@@ -25,42 +25,39 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
-type ClientOption func(*runtime.ClientOperation)
-
 // ClientService is the interface for Client methods
 type ClientService interface {
-	CreateBGPSession(params *CreateBGPSessionParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateBGPSessionOK, *CreateBGPSessionCreated, error)
+	CreateBGPSession(params *CreateBGPSessionParams, authInfo runtime.ClientAuthInfoWriter) (*CreateBGPSessionOK, *CreateBGPSessionCreated, error)
 
-	CreateDeviceBatch(params *CreateDeviceBatchParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateDeviceBatchCreated, error)
+	CreateDeviceBatch(params *CreateDeviceBatchParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDeviceBatchCreated, error)
 
-	CreateIPAssignment(params *CreateIPAssignmentParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateIPAssignmentCreated, error)
+	CreateIPAssignment(params *CreateIPAssignmentParams, authInfo runtime.ClientAuthInfoWriter) (*CreateIPAssignmentCreated, error)
 
-	DeleteDevice(params *DeleteDeviceParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteDeviceNoContent, error)
+	DeleteDevice(params *DeleteDeviceParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDeviceNoContent, error)
 
-	FindBGPSessions(params *FindBGPSessionsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindBGPSessionsOK, error)
+	FindBGPSessions(params *FindBGPSessionsParams, authInfo runtime.ClientAuthInfoWriter) (*FindBGPSessionsOK, error)
 
-	FindDeviceByID(params *FindDeviceByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDeviceByIDOK, error)
+	FindDeviceByID(params *FindDeviceByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindDeviceByIDOK, error)
 
-	FindDeviceCustomdata(params *FindDeviceCustomdataParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDeviceCustomdataOK, error)
+	FindDeviceCustomdata(params *FindDeviceCustomdataParams, authInfo runtime.ClientAuthInfoWriter) (*FindDeviceCustomdataOK, error)
 
-	FindDeviceUsages(params *FindDeviceUsagesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDeviceUsagesOK, error)
+	FindDeviceUsages(params *FindDeviceUsagesParams, authInfo runtime.ClientAuthInfoWriter) (*FindDeviceUsagesOK, error)
 
-	FindIPAssignmentCustomdata(params *FindIPAssignmentCustomdataParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindIPAssignmentCustomdataOK, error)
+	FindIPAssignmentCustomdata(params *FindIPAssignmentCustomdataParams, authInfo runtime.ClientAuthInfoWriter) (*FindIPAssignmentCustomdataOK, error)
 
-	FindIPAssignments(params *FindIPAssignmentsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindIPAssignmentsOK, error)
+	FindIPAssignments(params *FindIPAssignmentsParams, authInfo runtime.ClientAuthInfoWriter) (*FindIPAssignmentsOK, error)
 
-	FindInstanceBandwidth(params *FindInstanceBandwidthParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindInstanceBandwidthOK, error)
+	FindInstanceBandwidth(params *FindInstanceBandwidthParams, authInfo runtime.ClientAuthInfoWriter) (*FindInstanceBandwidthOK, error)
 
-	FindProjectUsage(params *FindProjectUsageParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindProjectUsageOK, error)
+	FindProjectUsage(params *FindProjectUsageParams, authInfo runtime.ClientAuthInfoWriter) (*FindProjectUsageOK, error)
 
-	FindTraffic(params *FindTrafficParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindTrafficOK, error)
+	FindTraffic(params *FindTrafficParams, authInfo runtime.ClientAuthInfoWriter) (*FindTrafficOK, error)
 
-	GetBGPNeighborData(params *GetBGPNeighborDataParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetBGPNeighborDataOK, error)
+	GetBGPNeighborData(params *GetBGPNeighborDataParams, authInfo runtime.ClientAuthInfoWriter) (*GetBGPNeighborDataOK, error)
 
-	PerformAction(params *PerformActionParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PerformActionAccepted, error)
+	PerformAction(params *PerformActionParams, authInfo runtime.ClientAuthInfoWriter) (*PerformActionAccepted, error)
 
-	UpdateDevice(params *UpdateDeviceParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdateDeviceOK, error)
+	UpdateDevice(params *UpdateDeviceParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateDeviceOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -70,12 +67,13 @@ type ClientService interface {
 
   Creates a BGP session.
 */
-func (a *Client) CreateBGPSession(params *CreateBGPSessionParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateBGPSessionOK, *CreateBGPSessionCreated, error) {
+func (a *Client) CreateBGPSession(params *CreateBGPSessionParams, authInfo runtime.ClientAuthInfoWriter) (*CreateBGPSessionOK, *CreateBGPSessionCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewCreateBGPSessionParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "createBgpSession",
 		Method:             "POST",
 		PathPattern:        "/devices/{id}/bgp/sessions",
@@ -87,12 +85,7 @@ func (a *Client) CreateBGPSession(params *CreateBGPSessionParams, authInfo runti
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, nil, err
 	}
@@ -148,12 +141,13 @@ For example, `{ "ip_addresses": [..., {"address_family": 4, "public": true, "ip_
 
 To access a server without public IPs, you can use our Out-of-Band console access (SOS) or use another server with public IPs as a proxy.
 */
-func (a *Client) CreateDeviceBatch(params *CreateDeviceBatchParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateDeviceBatchCreated, error) {
+func (a *Client) CreateDeviceBatch(params *CreateDeviceBatchParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDeviceBatchCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewCreateDeviceBatchParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "createDeviceBatch",
 		Method:             "POST",
 		PathPattern:        "/projects/{id}/devices/batch",
@@ -165,12 +159,7 @@ func (a *Client) CreateDeviceBatch(params *CreateDeviceBatchParams, authInfo run
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -189,12 +178,13 @@ func (a *Client) CreateDeviceBatch(params *CreateDeviceBatchParams, authInfo run
 
   Creates an ip assignment for a device.
 */
-func (a *Client) CreateIPAssignment(params *CreateIPAssignmentParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateIPAssignmentCreated, error) {
+func (a *Client) CreateIPAssignment(params *CreateIPAssignmentParams, authInfo runtime.ClientAuthInfoWriter) (*CreateIPAssignmentCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewCreateIPAssignmentParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "createIPAssignment",
 		Method:             "POST",
 		PathPattern:        "/devices/{id}/ips",
@@ -206,12 +196,7 @@ func (a *Client) CreateIPAssignment(params *CreateIPAssignmentParams, authInfo r
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -230,12 +215,13 @@ func (a *Client) CreateIPAssignment(params *CreateIPAssignmentParams, authInfo r
 
   Deletes a device and deprovisions it in our datacenter.
 */
-func (a *Client) DeleteDevice(params *DeleteDeviceParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteDeviceNoContent, error) {
+func (a *Client) DeleteDevice(params *DeleteDeviceParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDeviceNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteDeviceParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "deleteDevice",
 		Method:             "DELETE",
 		PathPattern:        "/devices/{id}",
@@ -247,12 +233,7 @@ func (a *Client) DeleteDevice(params *DeleteDeviceParams, authInfo runtime.Clien
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -271,12 +252,13 @@ func (a *Client) DeleteDevice(params *DeleteDeviceParams, authInfo runtime.Clien
 
   Provides a listing of available BGP sessions for the device.
 */
-func (a *Client) FindBGPSessions(params *FindBGPSessionsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindBGPSessionsOK, error) {
+func (a *Client) FindBGPSessions(params *FindBGPSessionsParams, authInfo runtime.ClientAuthInfoWriter) (*FindBGPSessionsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindBGPSessionsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findBgpSessions",
 		Method:             "GET",
 		PathPattern:        "/devices/{id}/bgp/sessions",
@@ -288,12 +270,7 @@ func (a *Client) FindBGPSessions(params *FindBGPSessionsParams, authInfo runtime
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -313,12 +290,13 @@ func (a *Client) FindBGPSessions(params *FindBGPSessionsParams, authInfo runtime
   Type-specific options (such as facility for baremetal devices) will be included as part of the main data structure.
                          State value can be one of: active inactive queued or provisioning
 */
-func (a *Client) FindDeviceByID(params *FindDeviceByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDeviceByIDOK, error) {
+func (a *Client) FindDeviceByID(params *FindDeviceByIDParams, authInfo runtime.ClientAuthInfoWriter) (*FindDeviceByIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindDeviceByIDParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findDeviceById",
 		Method:             "GET",
 		PathPattern:        "/devices/{id}",
@@ -330,12 +308,7 @@ func (a *Client) FindDeviceByID(params *FindDeviceByIDParams, authInfo runtime.C
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -354,12 +327,13 @@ func (a *Client) FindDeviceByID(params *FindDeviceByIDParams, authInfo runtime.C
 
   Provides the custom metadata stored for this instance in json format
 */
-func (a *Client) FindDeviceCustomdata(params *FindDeviceCustomdataParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDeviceCustomdataOK, error) {
+func (a *Client) FindDeviceCustomdata(params *FindDeviceCustomdataParams, authInfo runtime.ClientAuthInfoWriter) (*FindDeviceCustomdataOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindDeviceCustomdataParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findDeviceCustomdata",
 		Method:             "GET",
 		PathPattern:        "/devices/{id}/customdata",
@@ -371,12 +345,7 @@ func (a *Client) FindDeviceCustomdata(params *FindDeviceCustomdataParams, authIn
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -395,12 +364,13 @@ func (a *Client) FindDeviceCustomdata(params *FindDeviceCustomdataParams, authIn
 
   Returns all usages for a device.
 */
-func (a *Client) FindDeviceUsages(params *FindDeviceUsagesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDeviceUsagesOK, error) {
+func (a *Client) FindDeviceUsages(params *FindDeviceUsagesParams, authInfo runtime.ClientAuthInfoWriter) (*FindDeviceUsagesOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindDeviceUsagesParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findDeviceUsages",
 		Method:             "GET",
 		PathPattern:        "/devices/{id}/usages",
@@ -412,12 +382,7 @@ func (a *Client) FindDeviceUsages(params *FindDeviceUsagesParams, authInfo runti
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -436,12 +401,13 @@ func (a *Client) FindDeviceUsages(params *FindDeviceUsagesParams, authInfo runti
 
   Provides the custom metadata stored for this IP Assignment in json format
 */
-func (a *Client) FindIPAssignmentCustomdata(params *FindIPAssignmentCustomdataParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindIPAssignmentCustomdataOK, error) {
+func (a *Client) FindIPAssignmentCustomdata(params *FindIPAssignmentCustomdataParams, authInfo runtime.ClientAuthInfoWriter) (*FindIPAssignmentCustomdataOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindIPAssignmentCustomdataParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findIPAssignmentCustomdata",
 		Method:             "GET",
 		PathPattern:        "/devices/{instance_id}/ips/{id}/customdata",
@@ -453,12 +419,7 @@ func (a *Client) FindIPAssignmentCustomdata(params *FindIPAssignmentCustomdataPa
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -477,12 +438,13 @@ func (a *Client) FindIPAssignmentCustomdata(params *FindIPAssignmentCustomdataPa
 
   Returns all ip assignments for a device.
 */
-func (a *Client) FindIPAssignments(params *FindIPAssignmentsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindIPAssignmentsOK, error) {
+func (a *Client) FindIPAssignments(params *FindIPAssignmentsParams, authInfo runtime.ClientAuthInfoWriter) (*FindIPAssignmentsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindIPAssignmentsParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findIPAssignments",
 		Method:             "GET",
 		PathPattern:        "/devices/{id}/ips",
@@ -494,12 +456,7 @@ func (a *Client) FindIPAssignments(params *FindIPAssignmentsParams, authInfo run
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -518,12 +475,13 @@ func (a *Client) FindIPAssignments(params *FindIPAssignmentsParams, authInfo run
 
   Retrieve an instance bandwidth for a given period of time.
 */
-func (a *Client) FindInstanceBandwidth(params *FindInstanceBandwidthParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindInstanceBandwidthOK, error) {
+func (a *Client) FindInstanceBandwidth(params *FindInstanceBandwidthParams, authInfo runtime.ClientAuthInfoWriter) (*FindInstanceBandwidthOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindInstanceBandwidthParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findInstanceBandwidth",
 		Method:             "GET",
 		PathPattern:        "/devices/{id}/bandwidth",
@@ -535,12 +493,7 @@ func (a *Client) FindInstanceBandwidth(params *FindInstanceBandwidthParams, auth
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -559,12 +512,13 @@ func (a *Client) FindInstanceBandwidth(params *FindInstanceBandwidthParams, auth
 
   Returns all usages for a project.
 */
-func (a *Client) FindProjectUsage(params *FindProjectUsageParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindProjectUsageOK, error) {
+func (a *Client) FindProjectUsage(params *FindProjectUsageParams, authInfo runtime.ClientAuthInfoWriter) (*FindProjectUsageOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindProjectUsageParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findProjectUsage",
 		Method:             "GET",
 		PathPattern:        "/projects/{id}/usages",
@@ -576,12 +530,7 @@ func (a *Client) FindProjectUsage(params *FindProjectUsageParams, authInfo runti
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -600,12 +549,13 @@ func (a *Client) FindProjectUsage(params *FindProjectUsageParams, authInfo runti
 
   Returns traffic for a specific device.
 */
-func (a *Client) FindTraffic(params *FindTrafficParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindTrafficOK, error) {
+func (a *Client) FindTraffic(params *FindTrafficParams, authInfo runtime.ClientAuthInfoWriter) (*FindTrafficOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewFindTrafficParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "findTraffic",
 		Method:             "GET",
 		PathPattern:        "/devices/{id}/traffic",
@@ -617,12 +567,7 @@ func (a *Client) FindTraffic(params *FindTrafficParams, authInfo runtime.ClientA
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -641,12 +586,13 @@ func (a *Client) FindTraffic(params *FindTrafficParams, authInfo runtime.ClientA
 
   Provides a summary of the BGP neighbor data associated to the BGP sessions for this device.
 */
-func (a *Client) GetBGPNeighborData(params *GetBGPNeighborDataParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetBGPNeighborDataOK, error) {
+func (a *Client) GetBGPNeighborData(params *GetBGPNeighborDataParams, authInfo runtime.ClientAuthInfoWriter) (*GetBGPNeighborDataOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetBGPNeighborDataParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "getBgpNeighborData",
 		Method:             "GET",
 		PathPattern:        "/devices/{id}/bgp/neighbors",
@@ -658,12 +604,7 @@ func (a *Client) GetBGPNeighborData(params *GetBGPNeighborDataParams, authInfo r
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -682,12 +623,13 @@ func (a *Client) GetBGPNeighborData(params *GetBGPNeighborDataParams, authInfo r
 
   Performs an action for the given device.  Possible actions include: power_on, power_off, reboot, reinstall, and rescue (reboot the device into rescue OS.)
 */
-func (a *Client) PerformAction(params *PerformActionParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PerformActionAccepted, error) {
+func (a *Client) PerformAction(params *PerformActionParams, authInfo runtime.ClientAuthInfoWriter) (*PerformActionAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPerformActionParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "performAction",
 		Method:             "POST",
 		PathPattern:        "/devices/{id}/actions",
@@ -699,12 +641,7 @@ func (a *Client) PerformAction(params *PerformActionParams, authInfo runtime.Cli
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -723,12 +660,13 @@ func (a *Client) PerformAction(params *PerformActionParams, authInfo runtime.Cli
 
   Updates the device.
 */
-func (a *Client) UpdateDevice(params *UpdateDeviceParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdateDeviceOK, error) {
+func (a *Client) UpdateDevice(params *UpdateDeviceParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateDeviceOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewUpdateDeviceParams()
 	}
-	op := &runtime.ClientOperation{
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "updateDevice",
 		Method:             "PUT",
 		PathPattern:        "/devices/{id}",
@@ -740,12 +678,7 @@ func (a *Client) UpdateDevice(params *UpdateDeviceParams, authInfo runtime.Clien
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
+	})
 	if err != nil {
 		return nil, err
 	}
